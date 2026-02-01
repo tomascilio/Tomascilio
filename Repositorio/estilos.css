@@ -1,0 +1,339 @@
+/* ========================================
+   FONTS
+   ======================================== */
+@font-face {
+    font-family: 'Akzidenz-Grotesk';
+    src: url('fuentes/AkzidenzGrotesk-Medium.woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+
+/* ========================================
+   RESET & BASE
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Akzidenz-Grotesk" ;
+    background: linear-gradient(to bottom, #8a8a8a 0%, #d4d4d4 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #1a1a1a;
+    line-height: 1.6;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 3rem 2rem 3rem 2rem;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.header-left {
+    color: #f5f5f5;
+    font-size:  1.8rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+}
+
+.header-left .name {
+    font-weight: 600;
+}
+
+.header-left .title {
+    font-weight: 300;
+}
+
+.header-left .location {
+    font-weight: 300;
+}
+
+/* Contact button */
+.contact-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #f5f5f5;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+    letter-spacing: 0.03em;
+    transition: all 0.2s ease;
+}
+
+.contact-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ========================================
+   MODAL
+   ======================================== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.233);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-card {
+    background: #050505;
+    color: #f5f5f5;
+    padding: 3rem 3.5rem;
+    border-radius: 8px;
+    max-width: 480px;
+    width: 90%;
+    position: relative;
+    line-height: 2;
+    letter-spacing: 0.02em;
+    text-align: center
+}
+
+.modal-card .name {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+
+}
+
+.modal-card .info {
+    font-weight: 500;
+    font-size: 1.1rem;
+    line-height: 1.2;
+   
+}
+
+.modal-card .copyright {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.close-btn {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    background: transparent;
+    border: none;
+    color: #f5f5f5;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+/* ========================================
+   PROJECTS SECTION
+   ======================================== */
+.projects-section {
+    max-width: 100%;
+    margin: 28rem auto 1rem;
+    padding: 0 2rem; 
+}
+
+.projects-list {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+
+}
+
+
+.project-link {
+    color: #1a1a1a;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    border-bottom: 1px solid transparent;
+}
+
+.project-link:hover {
+    opacity: 0.6;
+}
+
+.project-number {
+    font-size: 1.2rem;
+    vertical-align: super;
+    opacity: 0.5;
+}
+
+/* ========================================
+   PROJECT VIEWER (OVERLAY)
+   ======================================== */
+.project-viewer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 2000;
+    overflow-y: auto;
+    cursor: pointer;
+}
+
+.project-viewer.active {
+    display: block;
+}
+
+.project-content {
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 3rem 4rem 6rem;
+    cursor: default;
+}
+
+.project-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+}
+
+.project-image {
+    width: 100%;
+    background: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.project-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.project-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+
+/* Primera imagen ocupa dos columnas SOLO si tiene la clase */
+.project-image.wide-image {
+    grid-column: 1 / -1;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 468px) {
+    header {
+        padding: 2rem 2rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+
+.header-left {
+        font-size: 1.2rem;        /* ← Agrega esto (más pequeño en tablet) */
+    }
+
+    /* Botón de tres puntos vertical */
+    .contact-btn {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        font-size: 1.5rem;
+        line-height: 1;
+        border-radius: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        writing-mode: vertical-lr;    /* ← Hacer vertical */
+        letter-spacing: -0.3em;       /* ← Juntar los puntos */
+    }
+    
+    
+    .contact-btn::before {
+        content: "⋯";                 /* Tres puntos */
+    }
+
+    .projects-section {
+        padding: 0 2rem;
+        margin: 24rem auto 3rem;
+    }
+
+    .projects-list {
+        font-size: 1.8rem;
+    }
+
+    .project-number {
+        font-size: 0.9rem;
+    }
+
+    .modal-card {
+        padding: 2.5rem 2rem;
+    }
+
+    .project-content {
+        padding: 2rem 2rem 4rem;
+    }
+
+    .project-images {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .project-image {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .projects-list {
+        font-size: 1.4rem;
+    }
+
+    .project-number {
+        font-size: 0.75rem;
+    }
+
+    .project-content {
+        padding: 1.5rem 1.5rem 3rem;
+    }
+}
