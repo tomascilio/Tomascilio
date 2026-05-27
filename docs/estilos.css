@@ -57,10 +57,6 @@ header {
     font-weight: 600;
 }
 
-.header-left .title {
-    font-weight: 300;
-}
-
 .header-left .location {
     font-weight: 300;
 }
@@ -220,12 +216,6 @@ header {
     cursor: default;
 }
 
-.project-images {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem;
-}
-
 .project-image {
     width: 100%;
     background: #e5e5e5;
@@ -260,7 +250,7 @@ header {
 /* ========================================
    RESPONSIVE
    ======================================== */
-@media (max-width: 468px) {
+@media (max-width: 480px) {
     header {
         padding: 2rem 2rem;
         flex-direction: row;
@@ -269,11 +259,10 @@ header {
         gap: 2rem;
     }
 
-.header-left {
-        font-size: 1.2rem;        /* ← Agrega esto (más pequeño en tablet) */
+    .header-left {
+        font-size: 1.2rem;
     }
 
-    /* Botón de tres puntos vertical */
     .contact-btn {
         width: 50px;
         height: 50px;
@@ -284,13 +273,8 @@ header {
         display: flex;
         align-items: center;
         justify-content: center;
-        writing-mode: vertical-lr;    /* ← Hacer vertical */
-        letter-spacing: -0.3em;       /* ← Juntar los puntos */
-    }
-    
-    
-    .contact-btn::before {
-        content: "⋯";                 /* Tres puntos */
+        writing-mode: vertical-lr;
+        letter-spacing: -0.3em;
     }
 
     .projects-section {
@@ -299,11 +283,11 @@ header {
     }
 
     .projects-list {
-        font-size: 1.8rem;
+        font-size: 1.4rem;
     }
 
     .project-number {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
     }
 
     .modal-card {
@@ -311,7 +295,7 @@ header {
     }
 
     .project-content {
-        padding: 2rem 2rem 4rem;
+        padding: 1.5rem 1.5rem 3rem;
     }
 
     .project-images {
@@ -321,19 +305,5 @@ header {
 
     .project-image {
         min-height: auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .projects-list {
-        font-size: 1.4rem;
-    }
-
-    .project-number {
-        font-size: 0.75rem;
-    }
-
-    .project-content {
-        padding: 1.5rem 1.5rem 3rem;
     }
 }
