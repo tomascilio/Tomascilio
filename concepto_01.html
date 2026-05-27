@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concepto 01</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    width: 1400px;
+    height: 800px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .left {
+    width: 380px;
+    min-width: 380px;
+    background-color: #0d1f3c;
+    padding: 64px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+  }
+
+  .left-content {}
+
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background-color: #4a7cc7;
+    margin-bottom: 32px;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #c8d8f0;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  p strong {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .page-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1px;
+  }
+
+  .right {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Aerial landscape SVG background */
+  .right svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  /* Blue overlay */
+  .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(13,31,60,0.45) 0%, rgba(20,50,100,0.25) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="left">
+  <div class="left-content">
+    <h1>Concepto</h1>
+    <div class="divider"></div>
+    <p>
+      Nos basamos en la <strong>geometría del paisaje visto desde arriba</strong>:
+      el canal Beagle, los bosques de lenga, las montañas como límites naturales.
+      Líneas que contienen sin declararse muros.
+    </p>
+    <p>
+      A partir de esto, planteamos un sistema donde <strong>el control es invisible</strong>,
+      al igual que el entorno que rodea la cárcel de Ushuaia. No hay guardias.
+      Solo la <strong>inmensidad del paisaje</strong> como mecanismo de contención permanente.
+    </p>
+    <p>
+      La naturaleza administra el encierro <strong>sin conciencia propia</strong>.
+      Eso lo hace más perfecto que cualquier sistema humano.
+    </p>
+  </div>
+  <div class="page-number">01</div>
+</div>
+
+<div class="right">
+  <svg viewBox="0 0 1020 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="blur1">
+        <feGaussianBlur stdDeviation="0.6"/>
+      </filter>
+    </defs>
+
+    <!-- Sky / base -->
+    <rect width="1020" height="800" fill="#0a1a30"/>
+
+    <!-- Water — Canal Beagle horizontal bands -->
+    <rect x="0" y="320" width="1020" height="260" fill="#0e2244"/>
+    <!-- Water texture lines -->
+    <line x1="0" y1="335" x2="1020" y2="332" stroke="#162d55" stroke-width="3"/>
+    <line x1="0" y1="355" x2="1020" y2="358" stroke="#162d55" stroke-width="2"/>
+    <line x1="0" y1="378" x2="1020" y2="374" stroke="#162d55" stroke-width="2.5"/>
+    <line x1="0" y1="400" x2="1020" y2="403" stroke="#132847" stroke-width="2"/>
+    <line x1="0" y1="425" x2="1020" y2="422" stroke="#162d55" stroke-width="3"/>
+    <line x1="0" y1="448" x2="1020" y2="451" stroke="#132847" stroke-width="1.5"/>
+    <line x1="0" y1="470" x2="1020" y2="467" stroke="#162d55" stroke-width="2"/>
+    <line x1="0" y1="495" x2="1020" y2="498" stroke="#132847" stroke-width="2.5"/>
+    <line x1="0" y1="520" x2="1020" y2="517" stroke="#162d55" stroke-width="2"/>
+    <line x1="0" y1="545" x2="1020" y2="548" stroke="#132847" stroke-width="1.5"/>
+    <line x1="0" y1="565" x2="1020" y2="562" stroke="#162d55" stroke-width="2"/>
+
+    <!-- Land mass top — mountains/terrain -->
+    <polygon points="0,0 1020,0 1020,310 880,280 760,260 680,295 580,250 480,310 380,270 280,300 180,255 80,290 0,265" fill="#0c1e38"/>
+
+    <!-- Mountain ridges -->
+    <polyline points="0,265 80,230 160,255 240,210 320,245 400,195 480,240 560,185 640,230 720,200 800,250 880,215 940,235 1020,210"
+      fill="none" stroke="#1a3560" stroke-width="3"/>
+    <polyline points="0,290 80,260 160,278 240,240 320,268 400,220 480,260 560,210 640,255 720,225 800,270 880,238 1020,235"
+      fill="none" stroke="#142b4e" stroke-width="2"/>
+
+    <!-- Snow caps on peaks -->
+    <polygon points="400,195 420,210 380,210" fill="#1e3f72" opacity="0.8"/>
+    <polygon points="560,185 580,200 540,202" fill="#1e3f72" opacity="0.8"/>
+    <polygon points="240,210 260,225 220,226" fill="#1e3f72" opacity="0.6"/>
+
+    <!-- Forest areas — grid of small dots/rects -->
+    <!-- Forest block 1 -->
+    <g opacity="0.5">
+      <rect x="100" y="265" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="112" y="260" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="124" y="268" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="136" y="263" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="148" y="270" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="160" y="265" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="106" y="276" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="118" y="272" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="130" y="279" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="142" y="274" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="154" y="281" width="6" height="6" rx="1" fill="#1a3a60"/>
+    </g>
+
+    <!-- Forest block 2 -->
+    <g opacity="0.5">
+      <rect x="620" y="250" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="632" y="245" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="644" y="252" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="656" y="247" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="668" y="254" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="680" y="249" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="626" y="261" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="638" y="256" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="650" y="263" width="6" height="6" rx="1" fill="#1a3a60"/>
+      <rect x="662" y="258" width="6" height="6" rx="1" fill="#1a3a60"/>
+    </g>
+
+    <!-- Urban grid / prison area — geometric blocks -->
+    <g opacity="0.8">
+      <!-- Main structure -->
+      <rect x="420" y="268" width="80" height="50" fill="none" stroke="#2a5090" stroke-width="1.5"/>
+      <rect x="430" y="278" width="25" height="15" fill="#1a3560" stroke="#2a5090" stroke-width="1"/>
+      <rect x="462" y="278" width="28" height="15" fill="#1a3560" stroke="#2a5090" stroke-width="1"/>
+      <rect x="430" y="298" width="25" height="14" fill="#1a3560" stroke="#2a5090" stroke-width="1"/>
+      <rect x="462" y="298" width="28" height="14" fill="#1a3560" stroke="#2a5090" stroke-width="1"/>
+
+      <!-- Adjacent blocks -->
+      <rect x="505" y="260" width="40" height="30" fill="none" stroke="#2a5090" stroke-width="1"/>
+      <rect x="510" y="265" width="13" height="10" fill="#1a3560" stroke="#2a5090" stroke-width="0.8"/>
+      <rect x="527" y="265" width="13" height="10" fill="#1a3560" stroke="#2a5090" stroke-width="0.8"/>
+      <rect x="510" y="279" width="13" height="8" fill="#1a3560" stroke="#2a5090" stroke-width="0.8"/>
+      <rect x="527" y="279" width="13" height="8" fill="#1a3560" stroke="#2a5090" stroke-width="0.8"/>
+
+      <rect x="380" y="278" width="35" height="22" fill="none" stroke="#2a5090" stroke-width="1"/>
+      <rect x="386" y="283" width="9" height="8" fill="#1a3560" stroke="#2a5090" stroke-width="0.8"/>
+      <rect x="399" y="283" width="9" height="8" fill="#1a3560" stroke="#2a5090" stroke-width="0.8"/>
+    </g>
+
+    <!-- Roads / paths -->
+    <line x1="0" y1="305" x2="1020" y2="308" stroke="#1e3d6e" stroke-width="4"/>
+    <line x1="0" y1="316" x2="1020" y2="319" stroke="#1a3560" stroke-width="2"/>
+    <line x1="415" y1="265" x2="415" y2="325" stroke="#1e3d6e" stroke-width="3"/>
+    <line x1="550" y1="255" x2="550" y2="322" stroke="#1a3560" stroke-width="2"/>
+    <line x1="300" y1="270" x2="300" y2="320" stroke="#1a3560" stroke-width="2"/>
+
+    <!-- Coastline edge -->
+    <polyline points="0,320 120,318 240,322 360,317 480,321 600,316 720,320 840,315 960,319 1020,317"
+      fill="none" stroke="#2a5a9e" stroke-width="2.5"/>
+
+    <!-- Land mass bottom — Isla Navarino -->
+    <rect x="0" y="590" width="1020" height="210" fill="#0c1e38"/>
+    <polyline points="0,590 100,600 200,585 320,595 440,580 560,592 680,578 800,588 900,575 1020,585"
+      fill="none" stroke="#1a3560" stroke-width="2"/>
+
+    <!-- Horizon mist line -->
+    <rect x="0" y="578" width="1020" height="14" fill="#0a1830" opacity="0.7"/>
+
+    <!-- Wind lines — subtle horizontal -->
+    <line x1="0" y1="150" x2="1020" y2="148" stroke="#112240" stroke-width="1" opacity="0.5"/>
+    <line x1="0" y1="180" x2="1020" y2="183" stroke="#112240" stroke-width="1" opacity="0.4"/>
+    <line x1="0" y1="60"  x2="1020" y2="63"  stroke="#112240" stroke-width="1" opacity="0.3"/>
+
+  </svg>
+  <div class="overlay"></div>
+</div>
+
+</body>
+</html>
