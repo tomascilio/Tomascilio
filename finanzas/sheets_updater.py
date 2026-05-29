@@ -159,12 +159,17 @@ def _update_gastos_sheet(worksheet, transactions: list) -> None:
     # Leer todas las celdas de la hoja para encontrar las filas
     all_values = worksheet.get_all_values()
 
-    # Construir índice: texto normalizado → fila (1-indexed)
-    # Normalizar elimina acentos y espacios extra para búsqueda robusta
-    label_to_row = {}
+    # Construir índice: texto normalizado → (fila, col_monto) 1-indexed
+    # Busca el label en las primeras 3 columnas para cubrir distintos layouts
+    label_to_row = {}   # norm_label → (row_num, amount_col)
     for i, row in enumerate(all_values):
-        if row and row[0].strip():
-            label_to_row[_normalize(row[0])] = i + 1
+        for col_idx, cell in enumerate(row[:3]):
+            if cell and cell.strip():
+                norm = _normalize(cell)
+                if norm not in label_to_row:
+                    # la columna del monto es la siguiente
+                    amount_col = col_idx + 2  # 1-indexed, siguiente columna
+                    label_to_row[norm] = (i + 1, amount_col)
 
     # Preparar actualizaciones
     updates = []
@@ -174,27 +179,29 @@ def _update_gastos_sheet(worksheet, transactions: list) -> None:
             continue
 
         # Búsqueda exacta normalizada
-        row_num = label_to_row.get(_normalize(sheet_label))
+        match = label_to_row.get(_normalize(sheet_label))
 
         # Búsqueda parcial como fallback
-        if not row_num:
+        if not match:
             normalized_label = _normalize(sheet_label)
-            for norm_key, row in label_to_row.items():
+            for norm_key, val in label_to_row.items():
                 if normalized_label in norm_key or norm_key in normalized_label:
-                    row_num = row
+                    match = val
                     break
 
-        if not row_num:
+        if not match:
             print(f"    ⚠ No se encontró la fila para '{sheet_label}' en Gastos")
             continue
 
+        row_num, amount_col = match
+
         # Leer valor existente
-        existing_cell = worksheet.cell(row_num, 2).value or "0"
+        existing_cell = worksheet.cell(row_num, amount_col).value or "0"
         existing = _to_float(existing_cell)
         new_value = existing + amount
 
         updates.append({
-            "range": gspread.utils.rowcol_to_a1(row_num, 2),
+            "range": gspread.utils.rowcol_to_a1(row_num, amount_col),
             "values": [[new_value]],
         })
         print(f"    + {sheet_label}: ${amount:,.2f} (total: ${new_value:,.2f})")
