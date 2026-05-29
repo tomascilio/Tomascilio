@@ -391,7 +391,18 @@ def _normalize(text: str) -> str:
 def _to_float(value: str) -> float:
     if not value:
         return 0.0
-    cleaned = value.replace(".", "").replace(",", ".").replace("$", "").replace("U$S", "").strip()
+    cleaned = value.replace("$", "").replace("U$S", "").strip()
+    # Formato argentino: 1.234.567,89 → punto=miles, coma=decimal
+    if "," in cleaned and "." in cleaned:
+        cleaned = cleaned.replace(".", "").replace(",", ".")
+    # Solo coma como decimal: 1234,89
+    elif "," in cleaned:
+        cleaned = cleaned.replace(",", ".")
+    # Solo punto — si hay más de uno, o si hay exactamente 3 dígitos después → miles
+    elif "." in cleaned:
+        parts = cleaned.split(".")
+        if len(parts) > 2 or (len(parts) == 2 and len(parts[-1]) == 3):
+            cleaned = cleaned.replace(".", "")
     try:
         return float(cleaned)
     except ValueError:
