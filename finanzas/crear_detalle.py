@@ -70,6 +70,39 @@ def main():
     for t in TRANSACTIONS:
         rows.append(t)
 
+    # Totales por tarjeta
+    from collections import defaultdict
+    totals_ars = defaultdict(float)
+    totals_usd = defaultdict(float)
+    for t in TRANSACTIONS:
+        tarjeta = t[6]
+        monto_ars = t[3]
+        monto_usd = t[4]
+        if monto_ars:
+            val = monto_ars.replace("$", "").replace(".", "").replace(",", ".").strip()
+            try:
+                totals_ars[tarjeta] += float(val)
+            except ValueError:
+                pass
+        if monto_usd:
+            val = monto_usd.replace("US$", "").replace(",", ".").strip()
+            try:
+                totals_usd[tarjeta] += float(val)
+            except ValueError:
+                pass
+
+    rows.append([""])
+    summary_header_row = len(rows) + 1
+    rows.append(["Resumen por tarjeta", "", "", "Total $", "Total USD", "", "", ""])
+
+    card_order = ["Visa 3416", "AMEX 7928", "MP Mastercard"]
+    for card in card_order:
+        ars = totals_ars.get(card, 0)
+        usd = totals_usd.get(card, 0)
+        ars_str = f"${ars:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") if ars else ""
+        usd_str = f"US${usd:,.2f}" if usd else ""
+        rows.append([card, "", "", ars_str, usd_str, "", "", ""])
+
     ws.update("A1", rows, value_input_option="USER_ENTERED")
 
     # Formato título
@@ -108,6 +141,24 @@ def main():
         requests = [{"updateDimensionProperties": {"range": {"sheetId": sheet_id, "dimension": "COLUMNS", "startIndex": i, "endIndex": i+1}, "properties": {"pixelSize": w}, "fields": "pixelSize"}}
                     for i, w in enumerate([100, 260, 80, 110, 90, 230, 130, 100])]
         spreadsheet.batch_update({"requests": requests})
+    except Exception:
+        pass
+
+    # Formato resumen por tarjeta
+    try:
+        ws.format(f"A{summary_header_row}:H{summary_header_row}", {
+            "backgroundColor": {"red": 0.20, "green": 0.45, "blue": 0.65},
+            "textFormat": {"foregroundColor": COLOR_WHITE, "bold": True},
+        })
+        for j, card in enumerate(card_order):
+            r = summary_header_row + 1 + j
+            if "Visa" in card:
+                color = COLOR_VISA
+            elif "AMEX" in card:
+                color = COLOR_AMEX
+            else:
+                color = COLOR_MP
+            ws.format(f"A{r}:H{r}", {"backgroundColor": color})
     except Exception:
         pass
 
