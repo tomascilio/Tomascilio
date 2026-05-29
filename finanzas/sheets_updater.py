@@ -71,27 +71,34 @@ def _get_credentials() -> Credentials:
 
 # ── Función principal ──────────────────────────────────────────────────────
 
-def update_google_sheet(summary: dict) -> None:
+def update_google_sheet(summary: dict, profile: dict = None) -> None:
     """
     Toma el resumen procesado de una tarjeta y:
     1. Crea/actualiza la hoja "Consumos [Mes Año]" con el detalle completo
     2. Carga los totales por categoría en la hoja "Gastos" del mes correspondiente
     """
+    from profiles import PROFILES, DEFAULT_PROFILE
+    if profile is None:
+        profile = PROFILES[DEFAULT_PROFILE]
+
+    spreadsheet_id = profile.get("spreadsheet_id", SPREADSHEET_ID)
+
     creds = _get_credentials()
     client = gspread.authorize(creds)
-    spreadsheet = client.open_by_key(SPREADSHEET_ID)
+    spreadsheet = client.open_by_key(spreadsheet_id)
 
     # 1. Hoja de detalle de consumos
     sheet_name = _build_sheet_name(summary)
     worksheet = _get_or_create_worksheet(spreadsheet, sheet_name)
     rows, formats = _build_sheet_data(summary)
     _write_sheet(worksheet, rows, formats, summary)
-    print(f"  → Hoja '{sheet_name}' actualizada en Finanzas Tomi")
+    print(f"  → Hoja '{sheet_name}' actualizada")
 
     # 2. Cargar totales en la hoja Gastos
     gastos_sheet = _find_gastos_sheet(spreadsheet, summary.get("closing_date", ""))
     if gastos_sheet:
-        _update_gastos_sheet(gastos_sheet, summary["transactions"])
+        category_map = profile.get("category_map", _CATEGORY_TO_SHEET_LABEL)
+        _update_gastos_sheet(gastos_sheet, summary["transactions"], category_map)
         print(f"  → Totales cargados en hoja '{gastos_sheet.title}'")
 
 
@@ -123,7 +130,7 @@ def _find_gastos_sheet(spreadsheet, closing_date: str):
     return all_sheets.get("Gastos")
 
 
-def _update_gastos_sheet(worksheet, transactions: list) -> None:
+def _update_gastos_sheet(worksheet, transactions: list, category_map: dict = None) -> None:
     """
     Suma los montos por categoría y los escribe en las celdas correspondientes
     de la hoja Gastos. Convierte USD a ARS usando el tipo de cambio en F2.
@@ -169,10 +176,13 @@ def _update_gastos_sheet(worksheet, transactions: list) -> None:
                     amount_col = col_idx + 2  # 1-indexed, siguiente columna
                     label_to_row[norm] = (i + 1, amount_col)
 
+    if category_map is None:
+        category_map = _CATEGORY_TO_SHEET_LABEL
+
     # Preparar actualizaciones
     updates = []
     for cat, amount in totals.items():
-        sheet_label = _CATEGORY_TO_SHEET_LABEL.get(cat)
+        sheet_label = category_map.get(cat)
         if not sheet_label:
             continue
 

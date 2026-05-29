@@ -1,15 +1,15 @@
 """
-Automatizador de resúmenes de tarjeta → Finanzas Tomi (Google Sheets)
+Automatizador de resúmenes de tarjeta → Google Sheets (Finanzas Tomi o Mara)
 
 Uso:
     python main.py archivo.xlsx
-    python main.py resumen_visa.pdf
-    python main.py *.xlsx          (varios archivos)
+    python main.py resumen_visa.pdf --profile mara
+    python main.py *.xlsx --dry-run
 
 Qué hace:
     1. Detecta banco, tarjeta y fecha de cierre del archivo
     2. Extrae y categoriza cada transacción
-    3. Crea/reemplaza una hoja "Consumos [Mes Año]" en Finanzas Tomi con:
+    3. Crea/reemplaza una hoja "Consumos [Mes Año]" en el sheet del perfil con:
        - Tabla de transacciones categorizadas
        - Sección "Transacciones no identificadas" con la info completa
        - Resumen agrupado por categoría al final
@@ -23,17 +23,26 @@ from parser_excel import parse_excel
 from parser_pdf import parse_pdf
 from categorizer import categorize_transactions
 from sheets_updater import update_google_sheet
+from profiles import get_profile, DEFAULT_PROFILE
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Cargá resúmenes de tarjeta en Finanzas Tomi")
+    parser = argparse.ArgumentParser(description="Cargá resúmenes de tarjeta en Google Sheets")
     parser.add_argument("files", nargs="+", help="Archivos .xlsx o .pdf a procesar")
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Mostrá el resultado sin escribir en Google Sheets",
     )
+    parser.add_argument(
+        "--profile",
+        default=DEFAULT_PROFILE,
+        help="Perfil a usar: 'tomi' (default) o 'mara'",
+    )
     args = parser.parse_args()
+
+    profile = get_profile(args.profile)
+    print(f"Perfil: {args.profile}")
 
     all_transactions = []
 
@@ -65,8 +74,8 @@ def main():
         _print_dry_run(all_transactions)
     else:
         for summary in all_transactions:
-            update_google_sheet(summary)
-            print(f"\n✓ Hoja actualizada en Finanzas Tomi")
+            update_google_sheet(summary, profile=profile)
+            print(f"\n✓ Hoja actualizada ({args.profile})")
 
 
 def _print_dry_run(summaries):
