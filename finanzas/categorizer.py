@@ -105,7 +105,7 @@ def categorize_transactions(transactions: list[dict]) -> list[dict]:
     return transactions
 
 
-def _match_category(description: str) -> str | None:
+def _match_category(description: str):
     desc_lower = description.lower()
     for category, keywords in CATEGORY_RULES:
         if any(kw in desc_lower for kw in keywords):
