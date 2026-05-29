@@ -126,21 +126,36 @@ def _find_gastos_sheet(spreadsheet, closing_date: str):
 def _update_gastos_sheet(worksheet, transactions: list) -> None:
     """
     Suma los montos por categoría y los escribe en las celdas correspondientes
-    de la hoja Gastos. Solo actualiza las celdas que tienen una categoría mapeada.
-    Suma al valor existente para no pisar datos ya cargados.
+    de la hoja Gastos. Convierte USD a ARS usando el tipo de cambio en F2.
     """
-    # Calcular totales por categoría (solo $ARS)
+    # Leer todas las celdas de la hoja para encontrar las filas
+    all_values = worksheet.get_all_values()
+
+    # Leer tipo de cambio desde F2
+    usd_rate = 0.0
+    try:
+        f2_val = all_values[1][5] if len(all_values) > 1 and len(all_values[1]) > 5 else ""
+        usd_rate = _to_float(str(f2_val))
+        if usd_rate:
+            print(f"  → Tipo de cambio (F2): ${usd_rate:,.2f}")
+        else:
+            print("  ⚠ No se pudo leer el tipo de cambio de F2, USD no se convertirá")
+    except Exception:
+        pass
+
+    # Calcular totales por categoría (ARS + USD convertido)
     totals = defaultdict(float)
     for t in transactions:
         cat = t.get("category")
-        if cat and t.get("amount_ars"):
+        if not cat:
+            continue
+        if t.get("amount_ars"):
             totals[cat] += _to_float(t["amount_ars"])
+        if t.get("amount_usd") and usd_rate:
+            totals[cat] += _to_float(t["amount_usd"]) * usd_rate
 
     if not totals:
         return
-
-    # Leer todas las celdas de la hoja para encontrar las filas
-    all_values = worksheet.get_all_values()
 
     # Construir índice: texto normalizado → (fila, col_monto) 1-indexed
     # Busca el label en las primeras 3 columnas para cubrir distintos layouts
