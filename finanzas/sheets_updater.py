@@ -159,12 +159,12 @@ def _update_gastos_sheet(worksheet, transactions: list) -> None:
     # Leer todas las celdas de la hoja para encontrar las filas
     all_values = worksheet.get_all_values()
 
-    # Construir índice: texto de celda → (fila, col_monto)
-    # La hoja tiene el label en col A (índice 0) y el monto en col B (índice 1)
+    # Construir índice: texto normalizado → fila (1-indexed)
+    # Normalizar elimina acentos y espacios extra para búsqueda robusta
     label_to_row = {}
     for i, row in enumerate(all_values):
-        if row:
-            label_to_row[row[0].strip()] = i + 1  # 1-indexed
+        if row and row[0].strip():
+            label_to_row[_normalize(row[0])] = i + 1
 
     # Preparar actualizaciones
     updates = []
@@ -173,11 +173,14 @@ def _update_gastos_sheet(worksheet, transactions: list) -> None:
         if not sheet_label:
             continue
 
-        row_num = label_to_row.get(sheet_label)
+        # Búsqueda exacta normalizada
+        row_num = label_to_row.get(_normalize(sheet_label))
+
+        # Búsqueda parcial como fallback
         if not row_num:
-            # Búsqueda parcial como fallback
-            for label, row in label_to_row.items():
-                if sheet_label.lower() in label.lower():
+            normalized_label = _normalize(sheet_label)
+            for norm_key, row in label_to_row.items():
+                if normalized_label in norm_key or norm_key in normalized_label:
                     row_num = row
                     break
 
@@ -389,6 +392,15 @@ def _build_sheet_data(summary: dict) -> tuple[list[list], list[dict]]:
     })
 
     return rows, formats
+
+
+def _normalize(text: str) -> str:
+    """Normaliza texto para comparación robusta: minúsculas, sin acentos, sin espacios extra."""
+    import unicodedata
+    text = text.strip().lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
+    return text
 
 
 def _to_float(value: str) -> float:
