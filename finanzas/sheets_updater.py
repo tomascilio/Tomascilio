@@ -73,20 +73,131 @@ def _get_credentials() -> Credentials:
 
 def update_google_sheet(summary: dict) -> None:
     """
-    Toma el resumen procesado de una tarjeta y escribe una hoja nueva
-    en Finanzas Tomi.
+    Toma el resumen procesado de una tarjeta y:
+    1. Crea/actualiza la hoja "Consumos [Mes Año]" con el detalle completo
+    2. Carga los totales por categoría en la hoja "Gastos" del mes correspondiente
     """
     creds = _get_credentials()
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
 
+    # 1. Hoja de detalle de consumos
     sheet_name = _build_sheet_name(summary)
     worksheet = _get_or_create_worksheet(spreadsheet, sheet_name)
-
     rows, formats = _build_sheet_data(summary)
     _write_sheet(worksheet, rows, formats, summary)
-
     print(f"  → Hoja '{sheet_name}' actualizada en Finanzas Tomi")
+
+    # 2. Cargar totales en la hoja Gastos
+    gastos_sheet = _find_gastos_sheet(spreadsheet, summary.get("closing_date", ""))
+    if gastos_sheet:
+        _update_gastos_sheet(gastos_sheet, summary["transactions"])
+        print(f"  → Totales cargados en hoja '{gastos_sheet.title}'")
+
+
+# ── Mapeo categorías del script → etiquetas exactas en la hoja Gastos ────
+_CATEGORY_TO_SHEET_LABEL = {
+    "Vivienda / Alquiler":              "Vivienda / Alquiler",
+    "Servicios (luz, gas, internet)":   "Servicios (luz, gas, internet)",
+    "Transporte fijo (SUBE)":           "Transporte fijo (SUBE)",
+    "Créditos":                         "Créditos",
+    "Psicóloga":                        "Psicologa",
+    "Celular - Tuenti":                 "Celular - Tuenti",
+    "Facultad":                         "Facultad",
+    "Programas (Adobe)":                "Programas (Adobe)",
+    "IA (CLAUDE, MIDJOU)":              "IA (CLAUDE,MIDJOU)",
+    "Servicios dig (spotify, nube, yt)":"Servicios dig(spotify,nube,yt)",
+    "Comida / Supermercado":            "Comida / Supermercado",
+    "Salidas / Ocio / Rest.":           "Salidas / Ocio / Rest.",
+    "Arreglos casa":                    "Arreglos casa",
+    "Ropa / Cuidado personal":          "Ropa / Cuidado personal",
+    "Salud / Farmacia":                 "Salud / Farmacia",
+    "Tocadiscos":                       "Tocadiscos",
+    "Otros variables":                  "Otros variables",
+}
+
+
+def _find_gastos_sheet(spreadsheet, closing_date: str):
+    """
+    Encuentra la hoja Gastos correcta según el mes de cierre.
+    Busca en orden: 'Gastos [Mes Año]', 'Gastos [Mes]', 'Gastos'.
+    """
+    if len(closing_date) == 7:
+        year, month = closing_date.split("-")
+        month_name = _MONTH_NAMES.get(month, "")
+        candidates = [
+            f"Gastos {month_name} {year}",
+            f"Gastos {month_name}",
+            "Gastos",
+        ]
+    else:
+        candidates = ["Gastos"]
+
+    all_sheets = {ws.title: ws for ws in spreadsheet.worksheets()}
+    for name in candidates:
+        if name in all_sheets:
+            return all_sheets[name]
+    return None
+
+
+def _update_gastos_sheet(worksheet, transactions: list) -> None:
+    """
+    Suma los montos por categoría y los escribe en las celdas correspondientes
+    de la hoja Gastos. Solo actualiza las celdas que tienen una categoría mapeada.
+    Suma al valor existente para no pisar datos ya cargados.
+    """
+    # Calcular totales por categoría (solo $ARS)
+    totals = defaultdict(float)
+    for t in transactions:
+        cat = t.get("category")
+        if cat and t.get("amount_ars"):
+            totals[cat] += _to_float(t["amount_ars"])
+
+    if not totals:
+        return
+
+    # Leer todas las celdas de la hoja para encontrar las filas
+    all_values = worksheet.get_all_values()
+
+    # Construir índice: texto de celda → (fila, col_monto)
+    # La hoja tiene el label en col A (índice 0) y el monto en col B (índice 1)
+    label_to_row = {}
+    for i, row in enumerate(all_values):
+        if row:
+            label_to_row[row[0].strip()] = i + 1  # 1-indexed
+
+    # Preparar actualizaciones
+    updates = []
+    for cat, amount in totals.items():
+        sheet_label = _CATEGORY_TO_SHEET_LABEL.get(cat)
+        if not sheet_label:
+            continue
+
+        row_num = label_to_row.get(sheet_label)
+        if not row_num:
+            # Búsqueda parcial como fallback
+            for label, row in label_to_row.items():
+                if sheet_label.lower() in label.lower():
+                    row_num = row
+                    break
+
+        if not row_num:
+            print(f"    ⚠ No se encontró la fila para '{sheet_label}' en Gastos")
+            continue
+
+        # Leer valor existente
+        existing_cell = worksheet.cell(row_num, 2).value or "0"
+        existing = _to_float(existing_cell)
+        new_value = existing + amount
+
+        updates.append({
+            "range": gspread.utils.rowcol_to_a1(row_num, 2),
+            "values": [[new_value]],
+        })
+        print(f"    + {sheet_label}: ${amount:,.2f} (total: ${new_value:,.2f})")
+
+    if updates:
+        worksheet.batch_update(updates, value_input_option="USER_ENTERED")
 
 
 # ── Nombre de la hoja ──────────────────────────────────────────────────────
