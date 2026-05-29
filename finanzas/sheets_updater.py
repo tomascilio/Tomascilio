@@ -178,16 +178,11 @@ def _update_gastos_sheet(worksheet, transactions: list) -> None:
 
         row_num, amount_col = match
 
-        # Leer valor existente
-        existing_cell = worksheet.cell(row_num, amount_col).value or "0"
-        existing = _to_float(existing_cell)
-        new_value = existing + amount
-
         updates.append({
             "range": gspread.utils.rowcol_to_a1(row_num, amount_col),
-            "values": [[new_value]],
+            "values": [[amount]],
         })
-        print(f"    + {sheet_label}: ${amount:,.2f} (total: ${new_value:,.2f})")
+        print(f"    → {sheet_label}: ${amount:,.2f}")
 
     if updates:
         worksheet.batch_update(updates, value_input_option="USER_ENTERED")
