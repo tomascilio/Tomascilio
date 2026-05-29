@@ -37,14 +37,14 @@ transactions = [
     # Comida: Coto MP $334.963,59
     {"date": "", "description": "Coto supermercado", "installments": "", "amount_ars": "334963.59", "amount_usd": "", "category": "Comida / Supermercado", "card": "MP Mastercard"},
 
-    # Salidas: Venti Latam MP $80.500
-    {"date": "", "description": "Venti Latam", "installments": "", "amount_ars": "80500", "amount_usd": "", "category": "Salidas / Ocio / Rest.", "card": "MP Mastercard"},
+    # Salidas: Venti Latam MP $80.500 + df festival AMEX $32.500
+    {"date": "", "description": "Salidas / Ocio total", "installments": "", "amount_ars": "113000", "amount_usd": "", "category": "Salidas / Ocio / Rest.", "card": "MP Mastercard + AMEX 7928"},
 
     # Ropa: Joyería Ororub Visa $15.466,22
     {"date": "", "description": "Joyeria Ororub", "installments": "", "amount_ars": "15466.22", "amount_usd": "", "category": "Ropa / Cuidado personal", "card": "Visa 3416"},
 
-    # Otros variables: ML MP $43.990 + $22.822,49 + ML AMEX $26.099,66
-    {"date": "", "description": "MercadoLibre total", "installments": "", "amount_ars": "92912.15", "amount_usd": "", "category": "Otros variables", "card": "MP Mastercard + AMEX 7928"},
+    # Otros variables: ML MP $43.990 + $22.822,49 + ML AMEX $26.099,66 + no identificadas $10.000 + $9.994,87
+    {"date": "", "description": "Otros variables total", "installments": "", "amount_ars": "112907.02", "amount_usd": "", "category": "Otros variables", "card": "MP Mastercard + AMEX 7928 + Visa 3416"},
 ]
 
 summary = {
