@@ -118,26 +118,9 @@ _CATEGORY_TO_SHEET_LABEL = {
 
 
 def _find_gastos_sheet(spreadsheet, closing_date: str):
-    """
-    Encuentra la hoja Gastos correcta según el mes de cierre.
-    Busca en orden: 'Gastos [Mes Año]', 'Gastos [Mes]', 'Gastos'.
-    """
-    if len(closing_date) == 7:
-        year, month = closing_date.split("-")
-        month_name = _MONTH_NAMES.get(month, "")
-        candidates = [
-            f"Gastos {month_name} {year}",
-            f"Gastos {month_name}",
-            "Gastos",
-        ]
-    else:
-        candidates = ["Gastos"]
-
+    """Siempre carga en la hoja 'Gastos' (el mes activo)."""
     all_sheets = {ws.title: ws for ws in spreadsheet.worksheets()}
-    for name in candidates:
-        if name in all_sheets:
-            return all_sheets[name]
-    return None
+    return all_sheets.get("Gastos")
 
 
 def _update_gastos_sheet(worksheet, transactions: list) -> None:
