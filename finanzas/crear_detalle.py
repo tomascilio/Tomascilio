@@ -60,6 +60,18 @@ def main():
 
     ws = _get_or_create_worksheet(spreadsheet, SHEET_NAME)
 
+    # Leer tipo de cambio desde Gastos!F2
+    usd_rate = 0.0
+    try:
+        gastos_ws = spreadsheet.worksheet("Gastos")
+        f2 = gastos_ws.acell("F2").value
+        if f2:
+            from sheets_updater import _to_float
+            usd_rate = _to_float(str(f2))
+            print(f"  → Tipo de cambio (Gastos!F2): ${usd_rate:,.2f}")
+    except Exception as e:
+        print(f"  ⚠ No se pudo leer F2 de Gastos: {e}")
+
     # Título
     rows = [
         [f"Detalle de gastos — Mayo 2026", "", "", "", "", "", "", ""],
@@ -102,6 +114,17 @@ def main():
         ars_str = f"${ars:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") if ars else ""
         usd_str = f"US${usd:,.2f}" if usd else ""
         rows.append([card, "", "", ars_str, usd_str, "", "", ""])
+
+    # Total general
+    total_ars = sum(totals_ars.values())
+    total_usd = sum(totals_usd.values())
+    total_combinado = total_ars + (total_usd * usd_rate if usd_rate else 0)
+    total_row = len(rows) + 1
+    usd_nota = f" (US${total_usd:,.2f} × ${usd_rate:,.0f})" if usd_rate and total_usd else ""
+    total_str = f"${total_combinado:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    rows.append([""])
+    grand_total_row = len(rows) + 1
+    rows.append([f"TOTAL GENERAL{usd_nota}", "", "", total_str, "", "", "", ""])
 
     ws.update("A1", rows, value_input_option="USER_ENTERED")
 
@@ -162,7 +185,18 @@ def main():
     except Exception:
         pass
 
+    # Formato TOTAL GENERAL
+    try:
+        ws.format(f"A{grand_total_row}:H{grand_total_row}", {
+            "backgroundColor": {"red": 0.12, "green": 0.53, "blue": 0.30},
+            "textFormat": {"foregroundColor": COLOR_WHITE, "bold": True, "fontSize": 11},
+        })
+    except Exception:
+        pass
+
     print(f"✓ Hoja '{SHEET_NAME}' creada con {len(TRANSACTIONS)} transacciones.")
+    if usd_rate:
+        print(f"  Total general: {total_str} (incluye US${total_usd:,.2f} convertidos a ${usd_rate:,.0f})")
 
 
 if __name__ == "__main__":
