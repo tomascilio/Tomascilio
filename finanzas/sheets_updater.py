@@ -286,7 +286,7 @@ def _build_sheet_data(summary: dict) -> tuple[list[list], list[dict]]:
             t.get("amount_ars", ""),
             t.get("amount_usd", ""),
             t.get("category", ""),
-            f"{summary['card_type']} {summary['card_last4']}",
+            t.get("card") or f"{summary['card_type']} {summary['card_last4']}",
             summary.get("source_file", ""),
         ])
 
@@ -313,7 +313,7 @@ def _build_sheet_data(summary: dict) -> tuple[list[list], list[dict]]:
                 t.get("amount_ars", ""),
                 t.get("amount_usd", ""),
                 "⚠ No identificada",
-                f"{summary['card_type']} {summary['card_last4']}",
+                t.get("card") or f"{summary['card_type']} {summary['card_last4']}",
                 summary.get("source_file", ""),
             ])
             formats.append({
