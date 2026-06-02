@@ -44,6 +44,8 @@ PROFILES = {
             "Salud / Farmacia":                  "Salud / Farmacia",
             "Otros variables":                   "Otros variables",
             "Transporte fijo (SUBE)":            "Transporte (cabify)",
+            "Rappi":                             "Rappi",
+            "Perros":                            "Perros",
         },
     },
 }
