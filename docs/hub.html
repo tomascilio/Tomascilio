@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tomás Cilio — Graphic Designer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0F6E56;
+    --teal-light: #1D9E75;
+    --teal-pale: #E1F5EE;
+    --ink: #1A1A1A;
+    --muted: #666;
+    --border: #e2e2e2;
+    --bg: #FAFAF8;
+    --card: #fff;
+  }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 1rem;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 3rem 0 4rem;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.5rem;
+  }
+
+  .name {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .role {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-weight: 400;
+  }
+
+  .divider {
+    width: 2rem;
+    height: 2px;
+    background: var(--teal);
+    margin: 1.25rem 0;
+  }
+
+  /* Cards grid */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: border-color 0.15s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .card:active {
+    transform: scale(0.97);
+    border-color: var(--teal-light);
+  }
+
+  .card-icon {
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .card-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .card-arrow {
+    font-size: 0.75rem;
+    color: var(--teal);
+    margin-top: auto;
+    padding-top: 0.4rem;
+  }
+
+  /* CV card full width */
+  .card-full {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    background: var(--teal);
+    border-color: var(--teal);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+
+  .card-full .card-label,
+  .card-full .card-title,
+  .card-full .card-arrow {
+    color: rgba(255,255,255,0.75);
+  }
+
+  .card-full .card-title {
+    color: #fff;
+    font-size: 0.9rem;
+  }
+
+  .card-full .card-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .card-full .card-text { flex: 1; }
+
+  /* Contact */
+  .contact-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+  }
+
+  .contact-row:last-child { border-bottom: none; }
+
+  .contact-row .ci { font-size: 0.9rem; flex-shrink: 0; }
+
+  .contact-row span { color: var(--ink); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #bbb;
+    text-transform: uppercase;
+    padding-top: 1rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="header">
+    <p class="eyebrow">Portfolio &amp; Contacto</p>
+    <h1 class="name">Tomás<br>Cilio</h1>
+    <p class="role">Graphic Designer · Art Director · Ecommerce</p>
+    <div class="divider"></div>
+  </header>
+
+  <p class="section-label">Materiales</p>
+  <div class="cards">
+
+    <a class="card card-full" href="https://drive.google.com/drive/folders/13Gu-YDpuaSe0V9dvFnLfGJsJoAJle3_0" target="_blank">
+      <div class="card-icon">📄</div>
+      <div class="card-text">
+        <p class="card-label">Curriculum vitae</p>
+        <p class="card-title">CV — Tomás Cilio 2026</p>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a class="card" href="https://tomascilio.github.io/Tomascilio/" target="_blank">
+      <div class="card-icon">🎨</div>
+      <p class="card-label">Portfolio</p>
+      <p class="card-title">GitHub Pages</p>
+      <p class="card-arrow">↗</p>
+    </a>
+
+    <a class="card" href="https://www.behance.net/tomascilio" target="_blank">
+      <div class="card-icon">🖼</div>
+      <p class="card-label">Behance</p>
+      <p class="card-title">tomascilio</p>
+      <p class="card-arrow">↗</p>
+    </a>
+
+    <a class="card" href="https://www.linkedin.com/in/tomascilio/" target="_blank">
+      <div class="card-icon">💼</div>
+      <p class="card-label">LinkedIn</p>
+      <p class="card-title">tomascilio</p>
+      <p class="card-arrow">↗</p>
+    </a>
+
+    <a class="card" href="https://tomascilio.taplink.bio" target="_blank">
+      <div class="card-icon">🔗</div>
+      <p class="card-label">Taplink</p>
+      <p class="card-title">tomascilio</p>
+      <p class="card-arrow">↗</p>
+    </a>
+
+  </div>
+
+  <p class="section-label">Contacto directo</p>
+  <div class="contact-block">
+    <a class="contact-row" href="mailto:ciliotomas@gmail.com">
+      <span class="ci">✉️</span>
+      <span>ciliotomas@gmail.com</span>
+    </a>
+    <a class="contact-row" href="tel:+541133091489">
+      <span class="ci">📱</span>
+      <span>+54 11 3309-1489</span>
+    </a>
+    <div class="contact-row">
+      <span class="ci">📍</span>
+      <span>Palermo, CABA</span>
+    </div>
+  </div>
+
+  <p class="footer">Tomás Cilio · 2026</p>
+
+</div>
+</body>
+</html>
